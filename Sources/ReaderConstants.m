@@ -26,3 +26,44 @@
 #import "ReaderConstants.h"
 
 static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright © 2011-2014 Julius Oklamcak. All rights reserved.";
+
+@implementation ReaderConstants
+
++ (ReaderConstants *)sharedReaderConstants{
+    static ReaderConstants *_sharedReaderConstants = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedReaderConstants = [[self alloc] init];
+    });
+    
+    return _sharedReaderConstants;
+}
+
+- (instancetype)init{
+    self = [super init];
+    
+    if (self) {
+        // Default Values
+        
+        self.flatUI = [ReaderConstants isAtLeastiOS7];
+        self.showShadows = YES;
+        self.enableThumbs = YES;
+        self.disableRetina = NO;
+        self.enablePreview = YES;
+        self.disableIdle = NO;
+        self.standalone = NO;
+        self.bookmarks = YES;
+    }
+    
+    return self;
+}
+
++ (BOOL)isAtLeastiOS7{
+    NSString *reqSysVer = @"7.0";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    return [currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending;
+}
+
+@end
+
