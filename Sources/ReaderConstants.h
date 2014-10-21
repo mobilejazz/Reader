@@ -35,7 +35,7 @@
 
 /**
  *  If TRUE, follows the Fuglyosity of Flat Fad (flattens the UI).
- *  Default .
+ *  Default YES if iOS version is equal or greater than 7.0.
  */
 @property (nonatomic, assign) BOOL flatUI;
 
