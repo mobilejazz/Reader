@@ -23,7 +23,6 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "ReaderConstants.h"
 #import "ReaderViewController.h"
 #import "ThumbsViewController.h"
 #import "ReaderMainToolbar.h"

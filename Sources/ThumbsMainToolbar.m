@@ -24,6 +24,7 @@
 //
 
 #import "ReaderConstants.h"
+#import "ReaderColors.h"
 #import "ThumbsMainToolbar.h"
 
 @implementation ThumbsMainToolbar{
@@ -136,7 +137,7 @@
 			titleLabel.font = [UIFont systemFontOfSize:TITLE_FONT_SIZE];
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
+			titleLabel.textColor = [[ReaderColors sharedReaderColors] textColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;

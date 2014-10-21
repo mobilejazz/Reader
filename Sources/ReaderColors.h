@@ -1,8 +1,8 @@
 //
-//	ReaderViewController.h
-//	Reader v2.8.0
+//  ReaderColors.m
+//	Reader vX.X.X
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Guillermo Sáenz Urday on 2014-10-20.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,26 +23,25 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "ReaderDocument.h"
-#import "ReaderConstants.h"
-#import "ReaderColors.h"
+@interface ReaderColors : NSObject
 
-@class ReaderViewController;
++ (ReaderColors *)sharedReaderColors;
 
-@protocol ReaderViewControllerDelegate <NSObject>
+/**
+ *  MainToolbar and MainPagebar color. If flatUI is enable then you have to put only 1 color in the array if not you have to put 2 colors that will make the gradient. The colors also manage the alpha value of the view. 
+ *  See ReaderColors.m
+ *  
+ *  Default if flatUI is enable is white if not is a gradient from a lite color to a dark one.
+ */
+@property (nonatomic, strong) NSArray *toolbarBackgroundColor;
 
-@optional // Delegate protocols
-
-- (void)dismissReaderViewController:(ReaderViewController *)viewController;
-
-@end
-
-@interface ReaderViewController : UIViewController
-
-@property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
-
-- (instancetype)initWithReaderDocument:(ReaderDocument *)object;
+/**
+ *  Toolbar text color
+ *
+ *  Default Black
+ */
+@property (nonatomic, strong) UIColor *textColor;
 
 @end

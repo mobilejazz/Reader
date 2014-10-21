@@ -1,8 +1,8 @@
 //
-//	ReaderViewController.h
-//	Reader v2.8.0
+//  ReaderColors.m
+//	Reader vX.X.X
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Guillermo Sáenz Urday on 2014-10-20.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,26 +23,40 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ReaderDocument.h"
-#import "ReaderConstants.h"
 #import "ReaderColors.h"
+#import "ReaderConstants.h"
 
-@class ReaderViewController;
+@implementation ReaderColors
 
-@protocol ReaderViewControllerDelegate <NSObject>
++ (ReaderColors *)sharedReaderColors{
+    static ReaderColors *_sharedReaderColors = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedReaderColors = [[self alloc] init];
+    });
+    
+    return _sharedReaderColors;
+}
 
-@optional // Delegate protocols
-
-- (void)dismissReaderViewController:(ReaderViewController *)viewController;
-
-@end
-
-@interface ReaderViewController : UIViewController
-
-@property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
-
-- (instancetype)initWithReaderDocument:(ReaderDocument *)object;
+- (instancetype)init{
+    self = [super init];
+    
+    if (self) {
+        // Default Values
+        
+        if ([[ReaderConstants sharedReaderConstants] flatUI]) {
+            self.toolbarBackgroundColor = @[[UIColor colorWithWhite:0.94f alpha:0.94f]];
+        } else {
+            self.toolbarBackgroundColor = @[[UIColor colorWithWhite:0.92f alpha:0.8f],
+                                            [UIColor colorWithWhite:0.32f alpha:0.8f]];
+            ;
+        }
+        
+        self.textColor = [UIColor blackColor];
+    }
+    
+    return self;
+}
 
 @end

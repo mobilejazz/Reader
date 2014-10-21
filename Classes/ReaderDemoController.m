@@ -179,20 +179,39 @@
 	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
     
     /*
-    
-    // You can customize the flags right here, before the ReaderViewController is init.
-    // All the flags (bools) have a default value. See ReaderConstants.m
      
-    ReaderConstants *readerConstants = [ReaderConstants sharedReaderConstants];
+     // You can customize the flags right here, before the ReaderViewController is init.
+     // All the flags (bools) have a default value. See ReaderConstants.m
+     
+     ReaderConstants *readerConstants = [ReaderConstants sharedReaderConstants];
+     
+     readerConstants.flatUI = ;
+     readerConstants.showShadows = ;
+     readerConstants.enableThumbs = ;
+     readerConstants.disableRetina = ;
+     readerConstants.enablePreview = ;
+     readerConstants.disableIdle = ;
+     readerConstants.standalone = ;
+     readerConstants.bookmarks = ;
+     
+     */
     
-    readerConstants.flatUI = ;
-    readerConstants.showShadows = ;
-    readerConstants.enableThumbs = ;
-    readerConstants.disableRetina = ;
-    readerConstants.enablePreview = ;
-    readerConstants.disableIdle = ;
-    readerConstants.standalone = ;
-    readerConstants.bookmarks = ;
+    /*
+     
+    // You can customize the colors right here, before the ReaderViewController is init.
+    // All the colors (NSArray, UIColor) have a default value and manage the alpha of the view too.
+    // See ReaderColors.m
+    
+    ReaderColors *readerColors = [ReaderColors sharedReaderColors];
+    
+    if ([[ReaderConstants sharedReaderConstants] flatUI]) {
+        readerColors.toolbarBackgroundColor = @[[UIColor colorWithWhite:<#(CGFloat)#> alpha:<#(CGFloat)#>]];
+    } else {
+        readerColors.toolbarBackgroundColor = @[[UIColor colorWithWhite:<#(CGFloat)#> alpha:<#(CGFloat)#>],
+                                                [UIColor colorWithWhite:<#(CGFloat)#> alpha:<#(CGFloat)#>]];
+    }
+    
+    readerColors.textColor = [UIColor color];
     
     */
 

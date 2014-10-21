@@ -24,6 +24,7 @@
 //
 
 #import "ReaderConstants.h"
+#import "ReaderColors.h"
 #import "ReaderMainPagebar.h"
 #import "ReaderThumbCache.h"
 #import "ReaderDocument.h"
@@ -158,8 +159,8 @@
 			self.backgroundColor = [UIColor clearColor];
 
 			CAGradientLayer *layer = (CAGradientLayer *)self.layer;
-			UIColor *liteColor = [UIColor colorWithWhite:0.82f alpha:0.8f];
-			UIColor *darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f];
+			UIColor *liteColor = [[[ReaderColors sharedReaderColors] toolbarBackgroundColor] firstObject];
+			UIColor *darkColor = [[[ReaderColors sharedReaderColors] toolbarBackgroundColor] lastObject];
 			layer.colors = [NSArray arrayWithObjects:(id)liteColor.CGColor, (id)darkColor.CGColor, nil];
 
 			CGRect shadowRect = self.bounds; shadowRect.size.height = SHADOW_HEIGHT; shadowRect.origin.y -= shadowRect.size.height;
@@ -170,7 +171,7 @@
 		}
 		else // Follow The Fuglyosity of Flat Fad
 		{
-			self.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.94f];
+			self.backgroundColor = [[[ReaderColors sharedReaderColors] toolbarBackgroundColor] firstObject];
 
 			CGRect lineRect = self.bounds; lineRect.size.height = 1.0f; lineRect.origin.y -= lineRect.size.height;
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		115DB42019F609FC006B76A2 /* ReaderColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 115DB41F19F609FC006B76A2 /* ReaderColors.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -67,6 +68,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		115DB41E19F609FC006B76A2 /* ReaderColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderColors.h; path = Sources/ReaderColors.h; sourceTree = "<group>"; };
+		115DB41F19F609FC006B76A2 /* ReaderColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderColors.m; path = Sources/ReaderColors.m; sourceTree = "<group>"; };
 		11EB39D819F5DCDC007134F4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -309,6 +312,8 @@
 			children = (
 				45AB72EF141FC0B1003524C3 /* ReaderConstants.h */,
 				45AB72F0141FC0B1003524C3 /* ReaderConstants.m */,
+				115DB41E19F609FC006B76A2 /* ReaderColors.h */,
+				115DB41F19F609FC006B76A2 /* ReaderColors.m */,
 				45AB72F7141FC0B1003524C3 /* ReaderDocument.h */,
 				45AB72F8141FC0B1003524C3 /* ReaderDocument.m */,
 				45AB730D141FC0B1003524C3 /* ReaderViewController.h */,
@@ -459,6 +464,7 @@
 				45AB7319141FC0B1003524C3 /* ReaderMainPagebar.m in Sources */,
 				45AB731A141FC0B1003524C3 /* ReaderMainToolbar.m in Sources */,
 				45AB731C141FC0B1003524C3 /* ReaderThumbCache.m in Sources */,
+				115DB42019F609FC006B76A2 /* ReaderColors.m in Sources */,
 				45AB731D141FC0B1003524C3 /* ReaderThumbFetch.m in Sources */,
 				45AB731E141FC0B1003524C3 /* ReaderThumbQueue.m in Sources */,
 				45AB731F141FC0B1003524C3 /* ReaderThumbRender.m in Sources */,
