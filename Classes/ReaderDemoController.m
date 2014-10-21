@@ -177,6 +177,24 @@
 	NSString *filePath = [pdfs firstObject]; assert(filePath != nil); // Path to first PDF file
 
 	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
+    
+    /*
+    
+    // You can customize the flags right here, before the ReaderViewController is init.
+    // All the flags (bools) have a default value. See ReaderConstants.m
+     
+    ReaderConstants *readerConstants = [ReaderConstants sharedReaderConstants];
+    
+    readerConstants.flatUI = ;
+    readerConstants.showShadows = ;
+    readerConstants.enableThumbs = ;
+    readerConstants.disableRetina = ;
+    readerConstants.enablePreview = ;
+    readerConstants.disableIdle = ;
+    readerConstants.standalone = ;
+    readerConstants.bookmarks = ;
+    
+    */
 
 	if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
 	{
