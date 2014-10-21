@@ -66,4 +66,3 @@ static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright ©
 }
 
 @end
-
