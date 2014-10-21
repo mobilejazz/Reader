@@ -517,11 +517,11 @@
 		[self performSelector:@selector(showDocument) withObject:nil afterDelay:0.0];
 	}
 
-#if (READER_DISABLE_IDLE == TRUE) // Option
-
-	[UIApplication sharedApplication].idleTimerDisabled = YES;
-
-#endif // end of READER_DISABLE_IDLE Option
+    if ([[ReaderConstants sharedReaderConstants] disableIdle]) { // Option
+        
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
+        
+    } // end of disableIdle Option
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -530,11 +530,11 @@
 
 	lastAppearSize = self.view.bounds.size; // Track view size
 
-#if (READER_DISABLE_IDLE == TRUE) // Option
-
-	[UIApplication sharedApplication].idleTimerDisabled = NO;
-
-#endif // end of READER_DISABLE_IDLE Option
+    if ([[ReaderConstants sharedReaderConstants] disableIdle]) { // Option
+        
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+        
+    } // end of disableIdle Option
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -829,29 +829,29 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button
 {
-#if (READER_STANDALONE == FALSE) // Option
-
-	[self closeDocument]; // Close ReaderViewController
-
-#endif // end of READER_STANDALONE Option
+    if (![[ReaderConstants sharedReaderConstants] standalone]) { // Option
+        
+        [self closeDocument]; // Close ReaderViewController
+        
+    } // end of standalone Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button
 {
-#if (READER_ENABLE_THUMBS == TRUE) // Option
-
-	if (printInteraction != nil) [printInteraction dismissAnimated:NO];
-
-	ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
-
-	thumbsViewController.title = self.title; thumbsViewController.delegate = self; // ThumbsViewControllerDelegate
-
-	thumbsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	thumbsViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-
-	[self presentViewController:thumbsViewController animated:NO completion:NULL];
-
-#endif // end of READER_ENABLE_THUMBS Option
+    if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
+        
+        if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+        
+        ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
+        
+        thumbsViewController.title = self.title; thumbsViewController.delegate = self; // ThumbsViewControllerDelegate
+        
+        thumbsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        thumbsViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+        
+        [self presentViewController:thumbsViewController animated:NO completion:NULL];
+        
+    } // end of enableThumbs Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar exportButton:(UIButton *)button
@@ -946,20 +946,20 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button
 {
-#if (READER_BOOKMARKS == TRUE) // Option
-
-	if (printInteraction != nil) [printInteraction dismissAnimated:YES];
-
-	if ([document.bookmarks containsIndex:currentPage]) // Remove bookmark
-	{
-		[document.bookmarks removeIndex:currentPage]; [mainToolbar setBookmarkState:NO];
-	}
-	else // Add the bookmarked page number to the bookmark index set
-	{
-		[document.bookmarks addIndex:currentPage]; [mainToolbar setBookmarkState:YES];
-	}
-
-#endif // end of READER_BOOKMARKS Option
+    if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
+        
+        if (printInteraction != nil) [printInteraction dismissAnimated:YES];
+        
+        if ([document.bookmarks containsIndex:currentPage]) // Remove bookmark
+        {
+            [document.bookmarks removeIndex:currentPage]; [mainToolbar setBookmarkState:NO];
+        }
+        else // Add the bookmarked page number to the bookmark index set
+        {
+            [document.bookmarks addIndex:currentPage]; [mainToolbar setBookmarkState:YES];
+        }
+        
+    } // end of bookmarks Option
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate methods
@@ -984,20 +984,20 @@
 
 - (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
 {
-#if (READER_ENABLE_THUMBS == TRUE) // Option
-
-	[self showDocumentPage:page];
-
-#endif // end of READER_ENABLE_THUMBS Option
+    if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
+        
+        [self showDocumentPage:page];
+        
+    } // end of enableThumbs Option
 }
 
 - (void)dismissThumbsViewController:(ThumbsViewController *)viewController
 {
-#if (READER_ENABLE_THUMBS == TRUE) // Option
-
-	[self dismissViewControllerAnimated:NO completion:NULL];
-
-#endif // end of READER_ENABLE_THUMBS Option
+    if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
+        
+        [self dismissViewControllerAnimated:NO completion:NULL];
+        
+    } // end of enableThumbs Option
 }
 
 #pragma mark - ReaderMainPagebarDelegate methods

@@ -517,14 +517,14 @@
 	CGPDFDocumentRelease(_PDFDocRef), _PDFDocRef = NULL;
 }
 
-#if (READER_DISABLE_RETINA == TRUE) // Option
-
 - (void)didMoveToWindow
 {
-	self.contentScaleFactor = 1.0f; // Override scale factor
+    if ([[ReaderConstants sharedReaderConstants] disableRetina]) { // Option
+        
+        self.contentScaleFactor = 1.0f; // Override scale factor
+        
+    } // end of disableRetina Option
 }
-
-#endif // end of READER_DISABLE_RETINA Option
 
 #pragma mark - CATiledLayer delegate methods
 

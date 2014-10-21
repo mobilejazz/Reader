@@ -35,6 +35,9 @@
 
 	UIImage *markImageN;
 	UIImage *markImageY;
+    
+    UIImage *buttonH;
+    UIImage *buttonN;
 }
 
 #pragma mark - Constants
@@ -72,12 +75,10 @@
 	{
 		CGFloat viewWidth = self.bounds.size.width; // Toolbar view width
 
-#if (READER_FLAT_UI == TRUE) // Option
-		UIImage *buttonH = nil; UIImage *buttonN = nil;
-#else
-		UIImage *buttonH = [[UIImage imageNamed:@"Reader-Button-H"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-		UIImage *buttonN = [[UIImage imageNamed:@"Reader-Button-N"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-#endif // end of READER_FLAT_UI Option
+        if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
+            buttonH = [[UIImage imageNamed:@"Reader-Button-H"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+            buttonN = [[UIImage imageNamed:@"Reader-Button-N"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+        } // end of flatUI Option
 
 		BOOL largeDevice = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
 
@@ -87,73 +88,74 @@
 
 		CGFloat leftButtonX = BUTTON_X; // Left-side button start X position
 
-#if (READER_STANDALONE == FALSE) // Option
+        if (![[ReaderConstants sharedReaderConstants] standalone]) { // Option
+            
+            UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
+            NSString *doneButtonText = NSLocalizedString(@"Done", @"button");
+            CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
+            CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
+            
+            UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
+            [doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
+            [doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
+            [doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
+            [doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+            [doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+            doneButton.autoresizingMask = UIViewAutoresizingNone;
+            //doneButton.backgroundColor = [UIColor grayColor];
+            doneButton.exclusiveTouch = YES;
+            
+            [self addSubview:doneButton];
+            leftButtonX += (doneButtonWidth + buttonSpacing);
+            
+            titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
+            
+        } // end of standalone Option
 
-		UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
-		NSString *doneButtonText = NSLocalizedString(@"Done", @"button");
-		CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
-		CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
-
-		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
-		[doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
-		[doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
-		[doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
-		[doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-		[doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-		[doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		doneButton.autoresizingMask = UIViewAutoresizingNone;
-		//doneButton.backgroundColor = [UIColor grayColor];
-		doneButton.exclusiveTouch = YES;
-
-		[self addSubview:doneButton]; leftButtonX += (doneButtonWidth + buttonSpacing);
-
-		titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
-
-#endif // end of READER_STANDALONE Option
-
-#if (READER_ENABLE_THUMBS == TRUE) // Option
-
-		UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-		[thumbsButton setImage:[UIImage imageNamed:@"Reader-Thumbs"] forState:UIControlStateNormal];
-		[thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-		[thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-		[thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		thumbsButton.autoresizingMask = UIViewAutoresizingNone;
-		//thumbsButton.backgroundColor = [UIColor grayColor];
-		thumbsButton.exclusiveTouch = YES;
-
-		[self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
-
-		titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
-
-#endif // end of READER_ENABLE_THUMBS Option
+        if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
+            
+            UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+            [thumbsButton setImage:[UIImage imageNamed:@"Reader-Thumbs"] forState:UIControlStateNormal];
+            [thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+            [thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+            thumbsButton.autoresizingMask = UIViewAutoresizingNone;
+            //thumbsButton.backgroundColor = [UIColor grayColor];
+            thumbsButton.exclusiveTouch = YES;
+            
+            [self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
+            
+            titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
+            
+        } // end of enableThumbs Option
 
 		CGFloat rightButtonX = viewWidth; // Right-side buttons start X position
 
-#if (READER_BOOKMARKS == TRUE) // Option
-
-		rightButtonX -= (iconButtonWidth + buttonSpacing); // Position
-
-		UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-		//[flagButton setImage:[UIImage imageNamed:@"Reader-Mark-N"] forState:UIControlStateNormal];
-		[flagButton addTarget:self action:@selector(markButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-		[flagButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-		[flagButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		flagButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-		//flagButton.backgroundColor = [UIColor grayColor];
-		flagButton.exclusiveTouch = YES;
-
-		[self addSubview:flagButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-
-		markButton = flagButton; markButton.enabled = NO; markButton.tag = NSIntegerMin;
-
-		markImageN = [UIImage imageNamed:@"Reader-Mark-N"]; // N image
-		markImageY = [UIImage imageNamed:@"Reader-Mark-Y"]; // Y image
-
-#endif // end of READER_BOOKMARKS Option
+        if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
+            
+            rightButtonX -= (iconButtonWidth + buttonSpacing); // Position
+            
+            UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+            //[flagButton setImage:[UIImage imageNamed:@"Reader-Mark-N"] forState:UIControlStateNormal];
+            [flagButton addTarget:self action:@selector(markButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [flagButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+            [flagButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+            flagButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+            //flagButton.backgroundColor = [UIColor grayColor];
+            flagButton.exclusiveTouch = YES;
+            
+            [self addSubview:flagButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+            
+            markButton = flagButton; markButton.enabled = NO; markButton.tag = NSIntegerMin;
+            
+            markImageN = [UIImage imageNamed:@"Reader-Mark-N"]; // N image
+            markImageY = [UIImage imageNamed:@"Reader-Mark-Y"]; // Y image
+            
+        } // end of bookmarks Option
 
 		if (document.canEmail == YES) // Document email enabled
 		{
@@ -234,10 +236,11 @@
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
 			titleLabel.text = [document.fileName stringByDeletingPathExtension];
-#if (READER_FLAT_UI == FALSE) // Option
-			titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
-			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-#endif // end of READER_FLAT_UI Option
+            
+            if (![[ReaderConstants sharedReaderConstants] flatUI]) { // Option
+                titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
+                titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+            } // end of flatUI Option
 
 			[self addSubview:titleLabel]; 
 		}
@@ -248,41 +251,41 @@
 
 - (void)setBookmarkState:(BOOL)state
 {
-#if (READER_BOOKMARKS == TRUE) // Option
-
-	if (state != markButton.tag) // Only if different state
-	{
-		if (self.hidden == NO) // Only if toolbar is visible
-		{
-			UIImage *image = (state ? markImageY : markImageN);
-
-			[markButton setImage:image forState:UIControlStateNormal];
-		}
-
-		markButton.tag = state; // Update bookmarked state tag
-	}
-
-	if (markButton.enabled == NO) markButton.enabled = YES;
-
-#endif // end of READER_BOOKMARKS Option
+    if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
+        
+        if (state != markButton.tag) // Only if different state
+        {
+            if (self.hidden == NO) // Only if toolbar is visible
+            {
+                UIImage *image = (state ? markImageY : markImageN);
+                
+                [markButton setImage:image forState:UIControlStateNormal];
+            }
+            
+            markButton.tag = state; // Update bookmarked state tag
+        }
+        
+        if (markButton.enabled == NO) markButton.enabled = YES;
+        
+    } // end of bookmarks Option
 }
 
 - (void)updateBookmarkImage
 {
-#if (READER_BOOKMARKS == TRUE) // Option
-
-	if (markButton.tag != NSIntegerMin) // Valid tag
-	{
-		BOOL state = markButton.tag; // Bookmarked state
-
-		UIImage *image = (state ? markImageY : markImageN);
-
-		[markButton setImage:image forState:UIControlStateNormal];
-	}
-
-	if (markButton.enabled == NO) markButton.enabled = YES;
-
-#endif // end of READER_BOOKMARKS Option
+    if ([[ReaderConstants sharedReaderConstants] bookmarks]) { // Option
+        
+        if (markButton.tag != NSIntegerMin) // Valid tag
+        {
+            BOOL state = markButton.tag; // Bookmarked state
+            
+            UIImage *image = (state ? markImageY : markImageN);
+            
+            [markButton setImage:image forState:UIControlStateNormal];
+        }
+        
+        if (markButton.enabled == NO) markButton.enabled = YES;
+        
+    } // end of bookmarks Option
 }
 
 - (void)hideToolbar
