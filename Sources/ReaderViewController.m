@@ -78,9 +78,6 @@
 #define SCROLLVIEW_OUTSET_SMALL 4.0f
 #define SCROLLVIEW_OUTSET_LARGE 8.0f
 
-#define LANDSCAPE_DOUBLE_PAGE true
-#define LANDSCAPE_SINGLE_FIRST_PAGE true
-
 #define TAP_AREA_SIZE 48.0f
 
 #pragma mark - Properties
@@ -116,7 +113,7 @@
         float nextCurrentPage = (currentPage / 2.0);
         
         
-        if (LANDSCAPE_SINGLE_FIRST_PAGE) {
+        if ([[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             nextCurrentPage = floor(nextCurrentPage) + 1;
             maxPage = ((maxPage - 1) / 2) + 1;
         } else {
@@ -178,7 +175,7 @@
     if (doublePage) {
         NSInteger lastPageEven;
  
-        if (!LANDSCAPE_SINGLE_FIRST_PAGE) {
+        if (![[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             lastPageEven = [document.pageCount integerValue];
             renderDoublePage = true;
             if (page > 1) {
@@ -281,7 +278,7 @@
 	NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
     
     if (doublePage && page > 1) {
-        if (!LANDSCAPE_SINGLE_FIRST_PAGE) {
+        if (![[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             page = page * 2;
         } else if (page > 1) {
             page = (page - 1) * 2;
@@ -316,7 +313,7 @@
         float nextRenderPage;
         //If double renderPage is not the same as page
         nextRenderPage = (page / 2.0);
-        if (LANDSCAPE_SINGLE_FIRST_PAGE) {
+        if ([[ReaderConstants sharedReaderConstants] landscapeSingleFirstPage]) {
             nextRenderPage = floor(nextRenderPage) + 1;
         } else if (page == 1) {
             nextRenderPage = 1;
@@ -355,7 +352,7 @@
 {
     UIInterfaceOrientation orientation= [[UIApplication sharedApplication] statusBarOrientation];
     
-    if(UIInterfaceOrientationIsLandscape(orientation) && LANDSCAPE_DOUBLE_PAGE){
+    if(UIInterfaceOrientationIsLandscape(orientation) && [[ReaderConstants sharedReaderConstants] landscapeDoublePage]){
         currentPage = [document.pageNumber integerValue];
         [self handleLandscapeDoublePage];
     } else {
@@ -584,7 +581,7 @@
 {
 	if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero) == false)
 	{
-        if (LANDSCAPE_DOUBLE_PAGE) {
+        if ([[ReaderConstants sharedReaderConstants] landscapeDoublePage]) {
             [self handleLandscapeDoublePage];
         } else {
             [self updateContentViews:theScrollView];

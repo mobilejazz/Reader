@@ -54,6 +54,8 @@ static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright ©
         self.disableIdle = NO;
         self.standalone = NO;
         self.bookmarks = YES;
+        self.landscapeDoublePage = NO;
+        self.landscapeSingleFirstPage = YES;
     }
     
     return self;

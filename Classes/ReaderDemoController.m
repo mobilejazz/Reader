@@ -193,6 +193,8 @@
      readerConstants.disableIdle = ;
      readerConstants.standalone = ;
      readerConstants.bookmarks = ;
+     readerConstants.landscapeDoublePage = ;
+     readerConstants.landscapeSingleFirstPage = ;
      
      */
     

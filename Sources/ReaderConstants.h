@@ -89,4 +89,18 @@
  */
 @property (nonatomic, assign) BOOL bookmarks;
 
+/**
+ *  If TRUE, enables landscape double page.
+ *
+ *  Default YES.
+ */
+@property (nonatomic, assign) BOOL landscapeDoublePage;
+
+/**
+ *  If TRUE, enables single first page (magazine like) on landscape.
+ *
+ *  Default YES.
+ */
+@property (nonatomic, assign) BOOL landscapeSingleFirstPage;
+
 @end
