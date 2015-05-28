@@ -195,6 +195,8 @@
 	{
 		if ([ReaderDocument isPDF:filePath] == YES) // Valid PDF
 		{
+            _fileFullPath = filePath;
+            
 			_guid = [ReaderDocument GUID]; // Create document's GUID
 
 			_password = [phrase copy]; // Keep copy of document password
