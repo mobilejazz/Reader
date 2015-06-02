@@ -43,29 +43,16 @@
 @implementation ReaderViewController
 {
 	ReaderDocument *document;
-
 	UIScrollView *theScrollView;
-
 	ReaderMainPagebar *mainPagebar;
-
 	NSMutableDictionary *contentViews;
-
 	UIUserInterfaceIdiom userInterfaceIdiom;
-
 	NSInteger currentPage, minimumPage, maximumPage;
-
 	UIDocumentInteractionController *documentInteraction;
-
-	UIPrintInteractionController *printInteraction;
-    
     BOOL doublePage;
-    
 	CGFloat scrollViewOutset;
-
 	CGSize lastAppearSize;
-
 	NSDate *lastHideTime;
-
 	BOOL ignoreDidScroll;
 }
 
@@ -89,17 +76,17 @@
 
 - (void)updateContentSize:(UIScrollView *)scrollView
 {
-	CGFloat contentHeight = scrollView.bounds.size.height; // Height
-
+	CGFloat contentHeight = scrollView.frame.size.height; // Height
 	CGFloat contentWidth = (scrollView.bounds.size.width * maximumPage);
-
 	scrollView.contentSize = CGSizeMake(contentWidth, contentHeight);
 }
 
-- (void)handleLandscapeDoublePage {
+- (void)handleLandscapeDoublePage
+{
     NSInteger futureCurrentPage = currentPage;
     
-    if (futureCurrentPage == 0) {
+    if (futureCurrentPage == 0)
+    {
         return;
     }
     
@@ -108,7 +95,8 @@
     
     doublePage = false;
     
-    if(UIInterfaceOrientationIsLandscape(orientation)){
+    if(UIInterfaceOrientationIsLandscape(orientation))
+    {
         doublePage = true;
         float maxPage = maximumPage;
         float nextCurrentPage = (currentPage / 2.0);
@@ -129,12 +117,11 @@
     for (NSNumber *key in [contentViews allKeys]) // Enumerate content views
     {
         ReaderContentView *contentView = [contentViews objectForKey:key];
-        
         [contentView removeFromSuperview]; [contentViews removeObjectForKey:key];
     }
     
-    
     [self updateContentViews:theScrollView];
+    
     //Force recompute view
     [self showDocumentPage:futureCurrentPage forceRedraw:true];
 }
@@ -347,10 +334,13 @@
 {
     UIInterfaceOrientation orientation= [[UIApplication sharedApplication] statusBarOrientation];
     
-    if(UIInterfaceOrientationIsLandscape(orientation) && [[ReaderConstants sharedReaderConstants] landscapeDoublePage]){
+    if(UIInterfaceOrientationIsLandscape(orientation) && [[ReaderConstants sharedReaderConstants] landscapeDoublePage])
+    {
         currentPage = [document.pageNumber integerValue];
         [self handleLandscapeDoublePage];
-    } else {
+    }
+    else
+    {
         [self updateContentSize:theScrollView]; // Update content size first
         [self showDocumentPage:[document.pageNumber integerValue]]; // Show page
     }
@@ -360,7 +350,7 @@
 
 - (void)closeDocument
 {
-	if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+	if (self.popover) [self.popover dismissPopoverAnimated:YES];
 
 	[document archiveDocumentProperties]; // Save any ReaderDocument changes
 
@@ -490,16 +480,24 @@
 
 	CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 0.0f);
 	theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // All
-	theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
-	theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
-	theScrollView.scrollsToTop = NO; theScrollView.delaysContentTouches = NO; theScrollView.pagingEnabled = YES;
+	theScrollView.autoresizesSubviews = NO;
+    theScrollView.contentMode = UIViewContentModeRedraw;
+	theScrollView.showsHorizontalScrollIndicator = NO;
+    theScrollView.showsVerticalScrollIndicator = NO;
+	theScrollView.scrollsToTop = NO;
+    theScrollView.delaysContentTouches = NO;
+    theScrollView.pagingEnabled = YES;
 	theScrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-	theScrollView.backgroundColor = [UIColor clearColor]; theScrollView.delegate = self;
+	theScrollView.backgroundColor = [UIColor clearColor];
+    theScrollView.delegate = self;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 	[self.view addSubview:theScrollView];
 
-	CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
+	CGRect toolbarRect = viewRect;
+    toolbarRect.size.height = TOOLBAR_HEIGHT;
 
-	CGRect pagebarRect = self.view.bounds; pagebarRect.size.height = PAGEBAR_HEIGHT;
+	CGRect pagebarRect = self.view.bounds;
+    pagebarRect.size.height = PAGEBAR_HEIGHT;
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
 	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
 	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
@@ -585,11 +583,13 @@
 
 	mainPagebar = nil;
 
-	theScrollView = nil; contentViews = nil; lastHideTime = nil;
-
-	documentInteraction = nil; printInteraction = nil;
-
-	lastAppearSize = CGSizeZero; currentPage = 0;
+    self.popover = nil;
+	theScrollView = nil;
+    contentViews = nil;
+    lastHideTime = nil;
+	documentInteraction = nil;
+	lastAppearSize = CGSizeZero;
+    currentPage = 0;
 
 	[super viewDidUnload];
 }
@@ -611,8 +611,6 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
-
 	ignoreDidScroll = YES;
 }
 
@@ -631,7 +629,6 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    
 	ignoreDidScroll = NO;
 }
 
@@ -843,18 +840,14 @@
 		if (touches.count == 1) // Single touches only
 		{
 			UITouch *touch = [touches anyObject]; // Touch info
-
 			CGPoint point = [touch locationInView:self.view]; // Touch location
-
 			CGRect areaRect = CGRectInset(self.view.bounds, TAP_AREA_SIZE, TAP_AREA_SIZE);
-
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
 
         [mainPagebar hidePagebar]; // Hide
-
 		lastHideTime = [NSDate date]; // Set last hide time
-        
+    
         BOOL barsHidden = self.navigationController.navigationBar.hidden;
         [self.navigationController setNavigationBarHidden:YES animated:YES];
 	}
@@ -872,9 +865,7 @@
 - (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
 {
     if ([[ReaderConstants sharedReaderConstants] enableThumbs]) {  // Option
-        
         [self showDocumentPage:page];
-        
     } // end of enableThumbs Option
 }
 
@@ -899,12 +890,15 @@
 - (void)applicationWillResign:(NSNotification *)notification
 {
 	[document archiveDocumentProperties]; // Save any ReaderDocument changes
-
-	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
 }
 
 - (void)actionDone
 {
+    if (self.popover)
+    {
+        [self.popover dismissPopoverAnimated:YES];
+    }
+    
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -914,13 +908,16 @@
     [[UIActivityViewController alloc] initWithActivityItems:@[self.navigationController.title, [NSURL fileURLWithPath:document.fileFullPath]]
                                       applicationActivities:nil];
     
-    if ([UIDevice currentDevice].systemVersion.floatValue < 8 && UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad) {
+    if ([UIDevice currentDevice].systemVersion.floatValue < 8
+        && UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
+    {
         self.popover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-        
         [self.popover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    } else {
-        
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8) {
+    }
+    else
+    {
+        if ([UIDevice currentDevice].systemVersion.floatValue >= 8)
+        {
             activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
         }
         
