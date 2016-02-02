@@ -904,27 +904,10 @@
 
 - (void)actionShare
 {
-    UIActivityViewController *activityViewController =
-    [[UIActivityViewController alloc] initWithActivityItems:@[self.navigationController.title, [NSURL fileURLWithPath:document.fileFullPath]]
-                                      applicationActivities:nil];
-    
-    if ([UIDevice currentDevice].systemVersion.floatValue < 8
-        && UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
-    {
-        self.popover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-        [self.popover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
-    else
-    {
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8)
-        {
-            activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
-        }
-        
-        [self.navigationController presentViewController:activityViewController
-                                                animated:YES
-                                              completion:nil];
-    }
+    documentInteraction = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:document.fileFullPath]];
+    documentInteraction.delegate = self;
+    [documentInteraction presentOptionsMenuFromBarButtonItem:self.navigationItem.rightBarButtonItem
+                                                    animated:YES];
 }
 
 @end
